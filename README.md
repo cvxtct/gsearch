@@ -1,0 +1,1 @@
+coverage https://stackoverflow.com/questions/10516662/how-to-measure-test-coverage-in-go
