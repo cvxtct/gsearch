@@ -12,9 +12,9 @@ import (
 	"github.com/fatih/color"
 )
 
-// Indexer
-func (p *Project) Indexer(f string, i int) bool {
-	doc, err := p.loadMarkDownDocuments(f)
+// DocumentProcessor
+func (p *Project) documentProcessor(f string, i int) bool {
+	doc, err := p.parseDocument(f)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -26,9 +26,9 @@ func (p *Project) Indexer(f string, i int) bool {
 }
 
 // Runner is in charge to run Indexer in go routine
-func (p *Project) Runner(boolChan chan bool) {
+func (p *Project) runner(boolChan chan bool) {
 	for i, f := range p.files {
-		indexed_file := p.Indexer(f, i)
+		indexed_file := p.documentProcessor(f, i)
 		boolChan <- indexed_file
 	}
 }
@@ -63,7 +63,7 @@ func main() {
 
 	//p.ParseArgument()
 	p.dir = "/Users/attilabalazs/Projects/__GO__"
-	p.FindFiles()
+	p.readFileNames()
 
 	// TODOs
 	// move indexer outside from main, do not index if index exists
@@ -72,7 +72,7 @@ func main() {
 	// recreate each file hash upon start,
 	// if change -> reindex
 	start := time.Now()
-	go p.Runner(boolChan)
+	go p.runner(boolChan)
 	// Wait for Runner to finish.
 	for i := 0; i < len(p.files); i++ {
 		res := <-boolChan
@@ -89,10 +89,6 @@ func main() {
 	log.Printf("Indexing took: %s", elapsed)
 
 	reader := bufio.NewReader(os.Stdin)
-
-	// mux := http.NewServeMux()
-	// mux.HandleFunc("/custom_debug_path/profile", pprof.Profile)
-	// log.Fatal(http.ListenAndServe(":7777", mux))
 
 	for {
 		// TODO make this dynamic
@@ -113,7 +109,7 @@ func main() {
 		for _, id := range matchedIDs {
 			doc := p.documents[id]
 			// TODO make this dynamic
-			color.White("--------------------------------------------------------------------------------------------")
+			color.White("---------------------------------------------------")
 			fmt.Printf("[In: %s/%s]\tContent: %s\n", doc.PathToFile, doc.FileName, doc.Text)
 		}
 		log.Printf("Search took: %s", elapsed)

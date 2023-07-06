@@ -10,7 +10,7 @@ import (
 )
 
 // ParseFiles parses a directory.
-func (p *Project) FindFiles() {
+func (p *Project) readFileNames() {
 
 	log.Println("Scanning: ", p.dir)
 
@@ -26,8 +26,8 @@ func (p *Project) FindFiles() {
 	})
 }
 
-// loadDocument parsing .md file
-func (p *Project) loadMarkDownDocuments(f string) (document, error) {
+// parseDocument parsing .md file
+func (p *Project) parseDocument(f string) (document, error) {
 	var r document
 	var lines string
 	// Open file.

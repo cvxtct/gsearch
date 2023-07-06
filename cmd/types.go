@@ -8,6 +8,8 @@ type document struct {
 	PathToFile string
 }
 
+type index map[string][]int
+
 type Project struct {
 	dir       string
 	files     []string
@@ -15,5 +17,3 @@ type Project struct {
 	query     string
 	documents []document
 }
-
-type index map[string][]int
