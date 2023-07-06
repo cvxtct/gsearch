@@ -8,14 +8,9 @@ import (
 	"runtime"
 	"strings"
 	"time"
-)
 
-// ParseArgument parses project path from command line.
-// func (p *Project) ParseArgument() {
-// 	flag.StringVar(&p.dir, "dir", "", "Directory to scan")
-// 	flag.StringVar(&p.query, "q", "Test term", "search query")
-// 	flag.Parse()
-// }
+	"github.com/fatih/color"
+)
 
 // Indexer
 func (p *Project) Indexer(f string, i int) bool {
@@ -56,19 +51,21 @@ func main() {
 	var p Project
 	p.idx = make(index)
 
-	log.Println("Starting program")
+	log.Println("Starting Markdown search...")
 
 	// checkers, check system before start
 	// later check memory, check disk space, calculate! etc...
 	checkOs()
-	
-	// Channel for sending back results of .
+
+	// channel for sending back results of indexer
 	boolChan := make(chan bool)
 	defer close(boolChan)
 
 	//p.ParseArgument()
-	p.dir = "/Users/attilabalazs/Projects/__ACTIVE__/"
+	p.dir = "/Users/attilabalazs/Projects/__GO__"
 	p.FindFiles()
+
+	// TODOs
 	// move indexer outside from main, do not index if index exists
 	// cli program should store index on disk,
 	// create file time hashes
@@ -87,35 +84,38 @@ func main() {
 			break
 		}
 	}
+
 	elapsed := time.Since(start)
 	log.Printf("Indexing took: %s", elapsed)
 
-	// fmt.Print(p.idx)
-
 	reader := bufio.NewReader(os.Stdin)
 
-	// TODO make this dynamic
-	fmt.Println("--------------------- s e a r c h ---------------------")
+	// mux := http.NewServeMux()
+	// mux.HandleFunc("/custom_debug_path/profile", pprof.Profile)
+	// log.Fatal(http.ListenAndServe(":7777", mux))
 
 	for {
+		// TODO make this dynamic
+		color.Yellow("--------------------- s e a r c h ---------------------")
+		color.Green("Documents indexed: %d", len(p.documents))
+		color.Green("Index size: %d", len(p.idx))
 		fmt.Print("-> ")
+
 		text, _ := reader.ReadString('\n')
 		text = strings.Replace(text, "\n", "", -1)
 		p.query = text
 
 		start = time.Now()
 		matchedIDs := p.idx.search(p.query)
-		log.Printf("Search found in %d document(s)", len(matchedIDs))
 		elapsed := time.Since(start)
+		log.Printf("Search found in %d document(s)", len(matchedIDs))
 
 		for _, id := range matchedIDs {
 			doc := p.documents[id]
 			// TODO make this dynamic
-			fmt.Println("--------------------------------------------------------------------------------------------")
+			color.White("--------------------------------------------------------------------------------------------")
 			fmt.Printf("[In: %s/%s]\tContent: %s\n", doc.PathToFile, doc.FileName, doc.Text)
 		}
 		log.Printf("Search took: %s", elapsed)
-		log.Printf("Documents indexed %d", len(p.documents))
-		log.Printf("Index size %d", len(p.idx))
 	}
 }

@@ -2,10 +2,13 @@ module search
 
 go 1.19
 
-require github.com/kljensen/snowball v0.8.0
+require (
+	github.com/fatih/color v1.15.0
+	github.com/kljensen/snowball v0.8.0
+)
 
 require (
-	golang.org/x/sys v0.4.0 // indirect
-	golang.org/x/tools v0.5.1-0.20230111220935-a7f7db3f17fc // indirect
-	golang.org/x/tools/cmd/cover v0.1.0-deprecated // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.17 // indirect
+	golang.org/x/sys v0.6.0 // indirect
 )
