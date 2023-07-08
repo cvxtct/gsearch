@@ -1,5 +1,6 @@
 package main
 
+import "log"
 
 // add function maps every word in documents to document IDs.
 // the built-in map is a good candidate for storing the mapping.
@@ -7,6 +8,7 @@ package main
 func (idx index) add(doc document){
 	for _, token := range normalize(doc.Text) {
 		ids := idx[token]
+		log.Println("%n", ids)
 		if ids != nil && ids[len(ids)-1] == doc.ID {
 			// Don't add same ID twice.
 			continue
@@ -44,8 +46,10 @@ func (idx index) search(text string) []int {
 	var res []int
 	for _, token := range normalize(text) {
 		if ids, ok := idx[token]; ok {
+			// search term is one word
 			if res == nil {
 				res = ids
+			// search term is more than one word
 			} else {
 				res = intersection(res, ids)
 			}
