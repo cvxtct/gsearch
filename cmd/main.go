@@ -30,6 +30,7 @@ func (p *Project) documentProcessor(f string) bool {
 }
 
 // Runner is in charge to run Indexer in go routine
+// TODO FIX parallel11ism!
 func (p *Project) runner(boolChan chan bool) {
 	for _, f := range p.files {
 		indexed_file := p.documentProcessor(f)
