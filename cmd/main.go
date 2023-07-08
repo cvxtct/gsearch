@@ -47,7 +47,7 @@ func main() {
 	p.idx = make(index)
 
 	prod := &producer{
-		docChan: make(chan document, 10),
+		docChan: make(chan document, 100),
 		quit:    make(chan chan error),
 	}
 
@@ -62,10 +62,8 @@ func main() {
 	p.dir = "/Users/attilabalazs/Projects/"
 
 	p.readFileNames()
-	fmt.Printf("LEN %d", len(p.files))
-	// wg.Add(len(p.files))
 
-	// producer
+	// document producer
 	go func() {
 		for i, f := range p.files {
 			wg.Add(1)
@@ -85,8 +83,7 @@ func main() {
 		defer close(prod.quit)
 	}()
 	
-
-	// consumer
+	// document consumer
 	start = time.Now()
 	for doc := range prod.docChan {
 		if len(prod.docChan) > len(p.files) {
