@@ -1,15 +1,12 @@
 package main
 
-import (
-	"log"
-	"time"
-)
+import "log"
 
 // add function maps every word in documents to document IDs.
 // the key in the map is a token (string) and the value is a list of document IDs
 // since the subesquent document id always greater
 // document added to index by doc.ID results ascending index
-func (idx index) add(doc *document) {
+func (idx index) add(doc document) {
 	for _, token := range normalize(doc.Text) {
 		ids := idx[token]
 		if ids != nil && ids[len(ids)-1] == doc.Id {
@@ -18,6 +15,8 @@ func (idx index) add(doc *document) {
 		}
 		idx[token] = append(ids, doc.Id)
 	}
+
+	log.Printf("Document %s indexed!", doc.FilePath)
 }
 
 // intersection function iterates two lists simultaneously
@@ -63,25 +62,4 @@ func (idx index) search(text string) []uint32 {
 		}
 	}
 	return res
-}
-
-func (p *Project) runIndex() {
-	var start time.Time
-	var elapsed time.Duration
-
-
-	for _, f := range p.files {
-		doc, err := p.parseDocument(f)
-		if err != nil {
-			log.Fatal(err)
-		}
-		// append document to documents
-		p.documents = append(p.documents, doc)
-
-		start = time.Now()
-		p.idx.add(doc)
-		elapsed = time.Since(start)
-	}
-	
-	log.Printf("Indexing took: %s", elapsed)
 }

@@ -6,7 +6,10 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 )
+
+var wg sync.WaitGroup
 
 // readFileNames parses a directory after a specified file
 func (p *Project) readFileNames() {
@@ -26,13 +29,14 @@ func (p *Project) readFileNames() {
 }
 
 // parseDocument parsing .md file
-func (p *Project) parseDocument(f string) (*document, error) {
+func (p *Project) parseDocument(f string, i int) document {
+	defer wg.Done()
 	//var doc document
 	var lines string
 	// Open file.
 	file, err := os.Open(f)
 	if err != nil {
-		return &document{}, err
+		return document{}
 	}
 
 	fileScanner := bufio.NewScanner(file)
@@ -46,7 +50,7 @@ func (p *Project) parseDocument(f string) (*document, error) {
 
 	// TODO create hash of document
 	doc := document{
-		Id:       uint32(len(p.documents)),
+		Id:       uint32(i),
 		Title:    f,
 		Text:     lines,
 		FilePath: f,
@@ -54,5 +58,6 @@ func (p *Project) parseDocument(f string) (*document, error) {
 
 	// Close file.
 	file.Close()
-	return &doc, nil
+	log.Printf("Document %s parsed!", f)
+	return doc
 }

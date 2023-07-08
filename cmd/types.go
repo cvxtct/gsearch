@@ -17,5 +17,5 @@ type Project struct {
 	files     []string
 	idx       index
 	query     string
-	documents []*document
+	documents []document
 }
