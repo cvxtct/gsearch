@@ -1,11 +1,13 @@
 package main
 
 type document struct {
-	Title      string
-	Text       string
-	ID         uint32
-	FileName   string
-	PathToFile string
+	Id        uint32
+	Key       string
+	FilePath  string
+	Title     string
+	Text      string
+	CreatedAt string
+	UpdatedAt string
 }
 
 type index map[string][]uint32

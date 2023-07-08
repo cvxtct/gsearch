@@ -35,21 +35,21 @@ func TestAdd(t *testing.T) {
 	}{
 		// start with a simple document with 2 sentence
 		// "today" repeated, should not add it again
-		{doc: document{ID: 0, Text: "Today we are going to ride. Hope today not gonna be raining"}, search: "Today", expected: []uint32{0}},
+		{doc: document{Id: 0, Text: "Today we are going to rIde. Hope today not gonna be raining"}, search: "Today", expected: []uint32{0}},
 		// act "Today" again to get two items in the result
-		{doc: document{ID: 1, Text: "Today all good."}, search: "Today", expected: []uint32{0, 1}},
+		{doc: document{Id: 1, Text: "Today all good."}, search: "Today", expected: []uint32{0, 1}},
 		// just another doc
-		{doc: document{ID: 2, Text: "It is ok to be not normal."}, search: "normal", expected: []uint32{2}},
+		{doc: document{Id: 2, Text: "It is ok to be not normal."}, search: "normal", expected: []uint32{2}},
 		// intersection from the left
-		{doc: document{ID: 3, Text: "Yet another document to search."}, search: "yet AnOther", expected: []uint32{3}},
+		{doc: document{Id: 3, Text: "Yet another document to search."}, search: "yet AnOther", expected: []uint32{3}},
 		// intersection from the right
-		{doc: document{ID: 3, Text: "This must be a longer sentence to have interesting result Today."}, search: "longer today", expected: []uint32{3}},
+		{doc: document{Id: 3, Text: "This must be a longer sentence to have interesting result Today."}, search: "longer today", expected: []uint32{3}},
 		// intersection using 3 terms
-		{doc: document{ID: 4, Text: "Physics is exciting to study, even better if you like math too."}, search: "math physics study", expected: []uint32{4}},
-		// add some trick to cover contition when res greater than ids
-		{doc: document{ID: 5, Text: "Physics is everywhere, it defines Today."}, search: "physics today", expected: []uint32{5}},
+		{doc: document{Id: 4, Text: "Physics is exciting to study, even better if you like math too."}, search: "math physics study", expected: []uint32{4}},
+		// add some trick to cover contition when res greater than Ids
+		{doc: document{Id: 5, Text: "Physics is everywhere, it defines Today."}, search: "physics today", expected: []uint32{5}},
 		// search term not in index
-		{doc: document{ID: 6, Text: "A sentence which not contains the search term."}, search: "foo", expected: nil},
+		{doc: document{Id: 6, Text: "A sentence which not contains the search term."}, search: "foo", expected: nil},
 	}
 
 	for _, tt := range addDocumentToIndexTest {
@@ -70,8 +70,8 @@ func TestAdd(t *testing.T) {
 				t.Logf("Search res %v", r)
 			}
 
-			d := p.documents[tt.doc.ID]
-			t.Logf("Doc ID %v", d.ID)
+			d := p.documents[tt.doc.Id]
+			t.Logf("Doc ID %v", d.Id)
 			equality := reflect.DeepEqual(sres, tt.expected)
 			if !equality {
 				t.Errorf("Got %v, expected %v", sres, tt.expected)

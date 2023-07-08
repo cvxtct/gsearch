@@ -7,11 +7,11 @@ package main
 func (idx index) add(doc *document) {
 	for _, token := range normalize(doc.Text) {
 		ids := idx[token]
-		if ids != nil && ids[len(ids)-1] == doc.ID {
+		if ids != nil && ids[len(ids)-1] == doc.Id {
 			// Don't add same ID twice.
 			continue
 		}
-		idx[token] = append(ids, doc.ID)
+		idx[token] = append(ids, doc.Id)
 	}
 }
 
