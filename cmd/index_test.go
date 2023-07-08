@@ -60,8 +60,8 @@ func TestAdd(t *testing.T) {
 				p.idx = make(index)
 			}
 
-			p.documents = append(p.documents, &tt.doc)
-			p.idx.add(&tt.doc)
+			p.documents = append(p.documents, tt.doc)
+			p.idx.add(tt.doc)
 			t.Log("Index length: %n", len(p.idx))
 			t.Log("Index content: %n", p.idx)
 

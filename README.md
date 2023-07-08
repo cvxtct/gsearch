@@ -13,3 +13,4 @@ $ go build -race mycmd   // to build the command
 $ go install -race mypkg // to install the package
 
 https://levelup.gitconnected.com/terminal-fun-in-go-babd2fce56d
+https://medium.com/@mhrlife/building-a-real-time-notification-service-with-golang-golang-basics-92e0dcb48d4d
