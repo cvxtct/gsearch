@@ -3,8 +3,6 @@ package main
 import (
 	"log"
 	"runtime"
-
-	"runtime/pprof"
 )
 
 func preFlightCheckOs() {
@@ -21,15 +19,12 @@ func preFlightCheckOs() {
 	}
 }
 
-var threadProfile = pprof.Lookup("threadcreate")
-
 func main() {
 
 	var p Project
 	p.idx = make(index)
 
 	log.Println("Starting Markdown search...")
-	log.Printf(("Threads in starting: %d\n"), threadProfile.Count())
 
 	// checkers, check system before start
 	// later check memory, check disk space, calculate! etc...

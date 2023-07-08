@@ -19,7 +19,6 @@ func (p *Project) interact() {
 		color.Yellow("--------------------- s e a r c h ---------------------")
 		color.Green("Documents indexed: %d", len(p.documents))
 		color.Green("Index size: %d token(s)", len(p.idx))
-		color.Blue(("Threads: %d\n"), threadProfile.Count())
 		fmt.Print("-> ")
 
 		text, _ := reader.ReadString('\n')

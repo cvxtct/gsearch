@@ -1,10 +1,5 @@
 package main
 
-import (
-	"log"
-	"time"
-)
-
 // add function maps every word in documents to document IDs.
 // the key in the map is a token (string) and the value is a list of document IDs
 // since the subesquent document id always greater
@@ -63,25 +58,4 @@ func (idx index) search(text string) []uint32 {
 		}
 	}
 	return res
-}
-
-func (p *Project) runIndex() {
-	var start time.Time
-	var elapsed time.Duration
-
-
-	for _, f := range p.files {
-		doc, err := p.parseDocument(f)
-		if err != nil {
-			log.Fatal(err)
-		}
-		// append document to documents
-		p.documents = append(p.documents, doc)
-
-		start = time.Now()
-		p.idx.add(doc)
-		elapsed = time.Since(start)
-	}
-	
-	log.Printf("Indexing took: %s", elapsed)
 }
