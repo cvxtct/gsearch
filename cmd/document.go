@@ -20,20 +20,20 @@ func (p *Project) readFileNames() {
 		}
 		if strings.Contains(path, ".md") {
 			p.files = append(p.files, path)
-			fmt.Printf("Markdown file collected: %s\n", path)
+			fmt.Printf("File collected: %s\n", path)
 		}
 		return nil
 	})
 }
 
 // parseDocument parsing .md file
-func (p *Project) parseDocument(f string) (document, error) {
-	var r document
+func (p *Project) parseDocument(f string) (*document, error) {
+	var doc document
 	var lines string
 	// Open file.
 	file, err := os.Open(f)
 	if err != nil {
-		return document{}, err
+		return &document{}, err
 	}
 
 	fileScanner := bufio.NewScanner(file)
@@ -41,17 +41,20 @@ func (p *Project) parseDocument(f string) (document, error) {
 	// Read file line by line.
 	for fileScanner.Scan() {
 		line := fileScanner.Text()
-		lines += line
+		lines += line + " "
 	}
-	
-	r.Title = f
-	r.Text = lines
+
+	// TODO create hash of document
+	// TODO use documents length to count document id
+	doc.ID = uint32(len(p.documents))
+	doc.Title = f // file name with path // TODO replace with something else
+	doc.Text = lines // lines extracted from doc
 	ss := strings.Split(f, "/")
-	r.FileName = ss[len(ss)-1]
+	doc.FileName = ss[len(ss)-1] // file name
 	ss = ss[:len(ss)-1]
-	r.PathToFile = strings.Join(ss, "/")
+	doc.PathToFile = strings.Join(ss, "/") // path to file
 
 	// Close file.
 	file.Close()
-	return r, nil
+	return &doc, nil
 }

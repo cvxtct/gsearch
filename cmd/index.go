@@ -1,14 +1,12 @@
 package main
 
-import "log"
-
 // add function maps every word in documents to document IDs.
-// the built-in map is a good candidate for storing the mapping.
-// the key in the map is a token (string) and the value is a list of document IDs:
-func (idx index) add(doc document){
+// the key in the map is a token (string) and the value is a list of document IDs
+// since the subesquent document id always greater
+// document added to index by doc.ID results ascending index
+func (idx index) add(doc *document) {
 	for _, token := range normalize(doc.Text) {
 		ids := idx[token]
-		log.Println("%n", ids)
 		if ids != nil && ids[len(ids)-1] == doc.ID {
 			// Don't add same ID twice.
 			continue
@@ -19,12 +17,13 @@ func (idx index) add(doc document){
 
 // intersection function iterates two lists simultaneously
 // and collect IDs that are exist in both lists
-func intersection(a []int, b []int) []int {
+// function do expect ascending indices!
+func intersection(a []uint32, b []uint32) []uint32 {
 	maxLen := len(a)
 	if len(b) > maxLen {
 		maxLen = len(b)
 	}
-	res := make([]int, 0, maxLen)
+	res := make([]uint32, 0, maxLen)
 	var i, j int
 	for i < len(a) && j < len(b) {
 		if a[i] < b[j] {
@@ -40,17 +39,17 @@ func intersection(a []int, b []int) []int {
 	return res
 }
 
-// search function checks serach term occurence
-// in text using index and returns it
-func (idx index) search(text string) []int {
-	var res []int
+// search function retrieves document id(s) from index
+func (idx index) search(text string) []uint32 {
+	var res []uint32
 	for _, token := range normalize(text) {
 		if ids, ok := idx[token]; ok {
 			// search term is one word
 			if res == nil {
 				res = ids
-			// search term is more than one word
+				// search term is more than one word
 			} else {
+				// intersection allows joined results
 				res = intersection(res, ids)
 			}
 		} else {

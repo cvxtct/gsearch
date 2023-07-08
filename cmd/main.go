@@ -13,12 +13,11 @@ import (
 )
 
 // DocumentProcessor
-func (p *Project) documentProcessor(f string, i int) bool {
+func (p *Project) documentProcessor(f string) bool {
 	doc, err := p.parseDocument(f)
 	if err != nil {
 		log.Fatal(err)
 	}
-	doc.ID = i
 	p.documents = append(p.documents, doc)
 	p.idx.add(doc)
 
@@ -27,8 +26,8 @@ func (p *Project) documentProcessor(f string, i int) bool {
 
 // Runner is in charge to run Indexer in go routine
 func (p *Project) runner(boolChan chan bool) {
-	for i, f := range p.files {
-		indexed_file := p.documentProcessor(f, i)
+	for _, f := range p.files {
+		indexed_file := p.documentProcessor(f)
 		boolChan <- indexed_file
 	}
 }
@@ -62,7 +61,7 @@ func main() {
 	defer close(boolChan)
 
 	//p.ParseArgument()
-	p.dir = "/Users/attilabalazs/Projects/__GO__"
+	p.dir = "/Users/attilabalazs/Projects/__gRPC__/"
 	p.readFileNames()
 
 	// TODOs
@@ -104,14 +103,21 @@ func main() {
 		start = time.Now()
 		matchedIDs := p.idx.search(p.query)
 		elapsed := time.Since(start)
-		log.Printf("Search found in %d document(s)", len(matchedIDs))
 
+		if matchedIDs == nil {
+			color.Red("Term %s not in index!", p.query)
+			continue
+		}
+
+		log.Printf("Search found in %d document(s)", len(matchedIDs))
+		
 		for _, id := range matchedIDs {
 			doc := p.documents[id]
 			// TODO make this dynamic
 			color.White("---------------------------------------------------")
 			fmt.Printf("[In: %s/%s]\tContent: %s\n", doc.PathToFile, doc.FileName, doc.Text)
 		}
-		log.Printf("Search took: %s", elapsed)
+		color.White("---------------------------------------------------")
+		color.Yellow("Search took: %s", elapsed)
 	}
 }
