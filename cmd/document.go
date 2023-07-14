@@ -14,15 +14,15 @@ var wg sync.WaitGroup
 // readFileNames parses a directory after a specified file
 func (p *Project) readFileNames() {
 
-	log.Println("Scanning: ", p.dir)
+	log.Println("Scanning: ", p.config.Path)
 
-	filepath.Walk(p.dir, func(path string, info os.FileInfo, err error) error {
+	filepath.Walk(p.config.Path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			log.Fatalf(err.Error())
+			p.ErrorLog.Fatalf(err.Error())
 		}
 		if strings.Contains(path, ".md") {
 			p.files = append(p.files, path)
-			log.Printf("File collected: %s\n", path)
+			p.InfoLog.Printf("File collected: %s\n", path)
 		}
 		return nil
 	})
@@ -58,6 +58,6 @@ func (p *Project) parseDocument(f string, i int) document {
 
 	// Close file.
 	file.Close()
-	log.Printf("Document %s parsed!", f)
+	p.InfoLog.Printf("Document %s parsed!", f)
 	return doc
 }

@@ -61,11 +61,11 @@ func TestAdd(t *testing.T) {
 			}
 
 			p.documents = append(p.documents, tt.doc)
-			p.idx.add(tt.doc)
+			p.add(tt.doc)
 			t.Log("Index length: %n", len(p.idx))
 			t.Log("Index content: %n", p.idx)
 
-			sres := p.idx.search(tt.search)
+			sres := p.search(tt.search)
 			for r := range sres {
 				t.Logf("Search res %v", r)
 			}

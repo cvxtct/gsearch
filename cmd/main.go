@@ -12,54 +12,53 @@ import (
 	"github.com/fatih/color"
 )
 
-
-func preFlightCheckOs() {
+func (p *Project) preFlightCheckOs() {
 	opsys := runtime.GOOS
 	switch opsys {
 	case "windows":
 		panic("Incompatible OS")
 	case "darwin":
-		log.Println("OS OSX OK!")
+		p.InfoLog.Println("OS OSX OK!")
 	case "linux":
-		log.Println("OS Linux OK!")
+		p.InfoLog.Println("OS Linux OK!")
 	default:
-		log.Printf("%s.\n", opsys)
+		p.InfoLog.Printf("%s.\n", opsys)
 	}
 }
 
-type producer struct {
-	docChan chan document
-	quit    chan chan error
-}
-
-func (p *producer) Close() error {
+func (d *documentProducer) Close() error {
 	ch := make(chan error)
-	p.quit <- ch
+	d.quit <- ch
 	return <-ch
 }
 
 func main() {
 
+	// performance measurement
 	var start time.Time
 	var elapsed time.Duration
 
+	// init project
 	var p Project
 	p.idx = make(index)
 
-	prod := &producer{
+	p.config = Configuration()
+	// create loggers
+	p.InfoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	p.ErrorLog = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+
+	docProd := &documentProducer{
 		docChan: make(chan document, 100),
 		quit:    make(chan chan error),
 	}
 
-	log.Println("Starting Markdown search...")
+	p.InfoLog.Println("Starting Markdown search...")
 
 	// checkers, check system before start
 	// later check memory, check disk space, calculate! etc...
-	log.Println("Pre flight checks...")
-	preFlightCheckOs()
-	log.Println("Pre flight checks done!")
-
-	p.dir = "/Users/attilabalazs/Projects/"
+	p.InfoLog.Println("Pre flight checks...")
+	p.preFlightCheckOs()
+	p.InfoLog.Println("Pre flight checks done!")
 
 	p.readFileNames()
 
@@ -68,35 +67,35 @@ func main() {
 		for i, f := range p.files {
 			wg.Add(1)
 			doc := p.parseDocument(f, i)
-		
+
 			select {
-			case prod.docChan <- doc:
-			case ch := <-prod.quit:
-				close(prod.docChan)
+			case docProd.docChan <- doc:
+			case ch := <-docProd.quit:
+				close(docProd.docChan)
 				// If the producer had an error while shutting down,
 				// we could write the error to the ch channel here.
 				close(ch)
 				return
 			}
 		}
-		defer close(prod.docChan)
-		defer close(prod.quit)
+		defer close(docProd.docChan)
+		defer close(docProd.quit)
 	}()
-	
+
 	// document consumer
 	start = time.Now()
-	for doc := range prod.docChan {
-		if len(prod.docChan) > len(p.files) {
-			err := prod.Close()
+	for doc := range docProd.docChan {
+		if len(docProd.docChan) > len(p.files) {
+			err := docProd.Close()
 			fmt.Printf("unexpected error: %v\n", err)
 		}
 		// add to index
-		p.idx.add(doc)
+		p.add(doc)
 		// add to documents slice
 		p.documents = append(p.documents, doc)
 	}
 	elapsed = time.Since(start)
-	log.Printf("Indexing took: %s", elapsed)
+	p.InfoLog.Printf("Indexing took: %s", elapsed)
 	// TODOs
 	// cli program should store index on disk,
 	// create file time hashes
@@ -105,9 +104,12 @@ func main() {
 
 	reader := bufio.NewReader(os.Stdin)
 
+	// User interaction
+
 	for {
-		// TODO make this bar dynamic
-		color.Yellow("--------------------- s e a r c h ---------------------")
+		fmt.Print("\n")
+		color.Yellow("//////////////////////////////////// s e a r c h //////////////////////////////////")
+		fmt.Print("\n")
 		color.Green("Documents indexed: %d", len(p.documents))
 		color.Green("Index size: %d token(s)", len(p.idx))
 		fmt.Print("-> ")
@@ -117,24 +119,69 @@ func main() {
 		p.query = text
 
 		start := time.Now()
-		matchedIDs := p.idx.search(p.query)
+		matchedIDs := p.search(p.query)
 		elapsed := time.Since(start)
 
 		if matchedIDs == nil {
-			color.Red("Term %s not in index!", p.query)
+			color.Red("Term << %s >> not in index!", p.query)
 			continue
 		}
 
-		log.Printf("Search found in %d document(s)", len(matchedIDs))
+		fmt.Print("\n")
+		color.Yellow("Search found in %d document(s)", len(matchedIDs))
+		fmt.Print("\n")
 
+		// Printing out results
+
+		// find longest path
+		maxLen := 0
 		for _, id := range matchedIDs {
 			doc := p.documents[id]
-			// TODO make this dynamic
-			color.White("---------------------------------------------------")
-			fmt.Printf("[In: %s]\t\nText: %s\n", doc.FilePath, doc.Text)
+			if maxLen < len(doc.FilePath) {
+				maxLen = len(doc.FilePath)
+			}
 		}
-		color.White("---------------------------------------------------")
-		color.Yellow("Search took: %s", elapsed)
-	}
 
+		// ruler width
+		var i int
+		ruler := "------"
+		for i < maxLen {
+			ruler += "-"
+			i++
+		}
+
+		// create formated result
+		for _, id := range matchedIDs {
+			doc := p.documents[id]
+
+			color.White("%s", ruler)
+			fmt.Printf("[In: %s]\t\n", doc.FilePath)
+
+			// align text to ruler if set in config
+			if p.config.ShowContent {
+				
+				fmt.Printf("[Show lines %d]\t\n", p.config.ShowNumLines)
+				color.White("%s", ruler)
+				
+				formated := ""
+				var lineCount uint16
+				lineCount = 0
+				for i := 0; i < len(doc.Text); i++ {
+					// do not print more lines then set in 
+					if lineCount == p.config.ShowNumLines {
+						break
+					}
+					formated += string(doc.Text[i])
+					if i%(maxLen+6) == 0  && i != 0 {
+						formated += "\n"
+						lineCount += 1
+					}
+				}
+				color.HiBlack("%s\n", formated)
+			}
+		}
+		fmt.Print("\n")
+		color.Yellow("Search took: %s\n", elapsed)
+		fmt.Print("\n")
+	}
 }
