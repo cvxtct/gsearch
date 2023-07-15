@@ -6,3 +6,6 @@
 
 # Config
 config.json
+
+# OSX
+.DS_Store
