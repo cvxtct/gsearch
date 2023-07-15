@@ -63,3 +63,6 @@ func (p *Project) search(text string) []uint32 {
 	}
 	return res
 }
+
+// TODO 
+// Search results by relevancy -> same word, synonyms?
