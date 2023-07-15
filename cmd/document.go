@@ -2,11 +2,13 @@ package main
 
 import (
 	"bufio"
+	"crypto/sha256"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 )
 
 var wg sync.WaitGroup
@@ -34,9 +36,11 @@ func (p *Project) readFileNames() {
 
 // parseDocument parsing .md file
 func (p *Project) parseDocument(f string, i int) document {
+
 	defer wg.Done()
-	//var doc document
+
 	var lines string
+
 	// Open file.
 	file, err := os.Open(f)
 	if err != nil {
@@ -49,15 +53,23 @@ func (p *Project) parseDocument(f string, i int) document {
 	for fileScanner.Scan() {
 		// TODO recognize title
 		line := fileScanner.Text()
+		// TODO extract urls from line
+
 		lines += line + " "
 	}
 
-	// TODO create hash of document
+	h := sha256.New()
+	h.Write([]byte(lines))
+	bs := h.Sum(nil)
+
 	doc := document{
-		Id:       uint32(i),
-		Title:    f,
-		Text:     lines,
-		FilePath: f,
+		Id:        uint32(i),
+		Key:       bs,
+		Title:     f,
+		Text:      lines,
+		FilePath:  f,
+		CreatedAt: time.Now(),
+		UpdatedAt: "",
 	}
 
 	// Close file.
