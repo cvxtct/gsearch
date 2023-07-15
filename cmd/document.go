@@ -16,7 +16,7 @@ func (p *Project) readFileNames() {
 
 	log.Println("Scanning: ", p.config.Path)
 
-	filepath.Walk(p.config.Path, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(p.config.Path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			p.ErrorLog.Fatalf(err.Error())
 		}
@@ -26,6 +26,10 @@ func (p *Project) readFileNames() {
 		}
 		return nil
 	})
+	
+	if err != nil {
+		panic(err)
+	}
 }
 
 // parseDocument parsing .md file
