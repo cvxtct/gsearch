@@ -69,7 +69,7 @@ func isAlphabetical(token string) bool {
 	return isAlphabet
 }
 
-func cleanTokens(tokens []string) []string {
+func languageNormalizer(tokens []string) []string {
 	r := make([]string, 0, len(tokens))
 	for _, token := range tokens {
 		if !isDigit(token) && !isAlphabetical(token){
