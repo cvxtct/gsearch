@@ -1,14 +1,17 @@
 package main
 
-import "log"
+import (
+	"log"
+	"time"
+)
 
 type document struct {
 	Id        uint32
-	Key       string
+	Key       []byte
 	FilePath  string
 	Title     string
 	Text      string
-	CreatedAt string
+	CreatedAt time.Time
 	UpdatedAt string
 }
 

@@ -110,7 +110,7 @@ func main() {
 
 	for {
 		fmt.Print("\n")
-		color.Yellow("//////////////////////////////////// s e a r c h //////////////////////////////////")
+		color.Yellow("//////////////////////////////////////////// s e a r c h /////////////////////////////////////////")
 		fmt.Print("\n")
 		color.Green("Documents indexed: %d", len(p.documents))
 		color.Green("Index size: %d token(s)", len(p.idx))
@@ -147,39 +147,49 @@ func main() {
 		// ruler width
 		var i int
 		ruler := "------"
+
+		if maxLen < 91 {
+			maxLen = 90
+		}
+
 		for i < maxLen {
 			ruler += "-"
 			i++
 		}
 
 		// create formated result
-		for _, id := range matchedIDs {
+		for i, id := range matchedIDs {
 			doc := p.documents[id]
 
 			color.White("%s", ruler)
-			fmt.Printf("[In: %s]\t\n", doc.FilePath)
+			color.White("[%v][%s]\t\n", i, doc.FilePath)
 
 			// align text to ruler if set in config
 			if p.config.ShowContent {
-				
-				fmt.Printf("[Show lines %d]\t\n", p.config.ShowNumLines)
+
 				color.White("%s", ruler)
-				
+
 				formated := ""
 				var lineCount uint16
 				lineCount = 0
 				for i := 0; i < len(doc.Text); i++ {
-					// do not print more lines then set in 
+					// do not print more lines then set in
 					if lineCount == p.config.ShowNumLines {
 						break
 					}
 					formated += string(doc.Text[i])
-					if i%(maxLen+6) == 0  && i != 0 {
+					if i%(maxLen+6) == 0 && i != 0 {
 						formated += "\n"
 						lineCount += 1
 					}
 				}
-				color.HiBlack("%s\n", formated)
+
+				color.HiBlack("%s", formated)
+				color.White("[max lines: %d]\n", p.config.ShowNumLines)
+				color.White("[hash: %x]", doc.Key)
+				color.White("[created: %v]\n", doc.CreatedAt.UTC())
+				color.White("%s", ruler)
+				fmt.Print("\n")
 			}
 		}
 		fmt.Print("\n")
