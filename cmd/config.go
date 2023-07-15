@@ -7,7 +7,7 @@ import (
 )
 
 func Configuration() Config {
-	file, _ := os.Open("config.json")
+	file, _ := os.Open("../config.json")
 	defer file.Close()
 	decoder := json.NewDecoder(file)
 	configuration := Config{}

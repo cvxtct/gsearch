@@ -43,7 +43,7 @@ func (p *Project) parseDocument(f string, i int) document {
 
 	// Read file line by line.
 	for fileScanner.Scan() {
-		// TODO recognise title
+		// TODO recognize title
 		line := fileScanner.Text()
 		lines += line + " "
 	}
