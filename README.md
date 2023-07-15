@@ -3,6 +3,8 @@
 
 [![Go](https://github.com/cvxtct/gsearch/actions/workflows/go.yml/badge.svg)](https://github.com/cvxtct/gsearch/actions/workflows/go.yml) [![Golangci-lint](https://github.com/cvxtct/gsearch/actions/workflows/main.yml/badge.svg)](https://github.com/cvxtct/gsearch/actions/workflows/main.yml) [![CodeQL](https://github.com/cvxtct/gsearch/actions/workflows/codeql.yml/badge.svg)](https://github.com/cvxtct/gsearch/actions/workflows/codeql.yml)
 
+---
+
 Experimental **Full Text Search** in `markdown` files written in Golang.
 
 Inspired by [Let's build a Full-Text Search engine](https://artem.krylysov.com/blog/2020/07/28/lets-build-a-full-text-search-engine/)
@@ -20,3 +22,11 @@ Run `make all`. Don't forget to set up `config.json` beforehand.
     "show_num_lines": 10 # limit lines of content
 }
 ```
+
+## Plans
+
+- Save index to db
+- Reindex if file changed
+- More sophisticated document storing i.e. url recognition 
+- Search result by relevancy (word frequency)
+- REST API interface
