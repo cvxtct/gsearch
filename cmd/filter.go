@@ -1,7 +1,9 @@
 package main
 
 import (
+	"regexp"
 	"strings"
+	"unicode"
 
 	snowballeng "github.com/kljensen/snowball/english"
 )
@@ -43,6 +45,38 @@ func stemmerFilter(tokens []string) []string {
 	r := make([]string, len(tokens))
 	for i, token := range tokens {
 		r[i] = snowballeng.Stem(token, false)
+	}
+	return r
+}
+
+// TODO
+// choose for removal set of special characters -> collect them
+// ignore non english words and non english characters
+// review and extend stop words
+// recognise urls, email adresses (?)
+
+// We don't really need anything else indexed than plain english words
+
+// This added extra 3 minutes to indexing 4m19.161874717s
+
+func isDigit(token string) bool {
+	numeric := regexp.MustCompile(`\d`).MatchString(token)
+	return numeric
+}
+
+func isAlphabetical(token string) bool {
+	isAlphabet := regexp.MustCompile(`^[a-zA-Z]+$`).MatchString(token)
+	return isAlphabet
+}
+
+func cleanTokens(tokens []string) []string {
+	r := make([]string, 0, len(tokens))
+	for _, token := range tokens {
+		if !isDigit(token) && !isAlphabetical(token){
+		//if !unicode.IsLetter(token) && !unicode.IsNumber(token) {
+			continue
+		}
+		r = append(r, token)
 	}
 	return r
 }
