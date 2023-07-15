@@ -136,7 +136,9 @@ func main() {
 		// Printing out results
 
 		// find longest path
-		maxLen := 0
+		var maxLen int
+		maxLen = 0
+		
 		for _, id := range matchedIDs {
 			doc := p.documents[id]
 			if maxLen < len(doc.FilePath) {
