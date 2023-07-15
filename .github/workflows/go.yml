@@ -28,7 +28,7 @@ jobs:
       with:
         name: bin-gsearch
         path: |
-          dist
+          .
 
     - name: Test
       run: go test -v ./cmd/
