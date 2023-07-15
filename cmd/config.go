@@ -15,6 +15,6 @@ func Configuration() Config {
 	if err != nil {
 		fmt.Println("error:", err)
 	}
-	
+	// TODO Validate config
 	return configuration
 }

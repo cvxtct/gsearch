@@ -34,7 +34,7 @@ func (d *documentProducer) Close() error {
 
 func main() {
 
-	// performance measurement
+	// performance times
 	var start time.Time
 	var elapsed time.Duration
 
@@ -42,6 +42,7 @@ func main() {
 	var p Project
 	p.idx = make(index)
 
+	// read config
 	p.config = Configuration()
 	// create loggers
 	p.InfoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
@@ -60,6 +61,7 @@ func main() {
 	p.preFlightCheckOs()
 	p.InfoLog.Println("Pre flight checks done!")
 
+	// read file names from the path given in config
 	p.readFileNames()
 
 	// document producer
