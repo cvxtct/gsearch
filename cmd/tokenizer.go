@@ -18,7 +18,7 @@ func tokenize(text string) []string {
 
 func normalize(text string) []string {
 	tokens := tokenize(text)
-	tokens = cleanTokens(tokens)
+	tokens = languageNormalizer(tokens)
 	tokens = lowercaseFilter(tokens)
 	tokens = stopwordFilter(tokens)
 	tokens = stemmerFilter(tokens)
