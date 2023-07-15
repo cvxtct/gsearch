@@ -23,11 +23,3 @@ Run `make all`. Don't forget to set up `config.json` beforehand.
 }
 ```
 
-## Plans
-
-- Save index to db
-- Reindex if file changed
-- More sophisticated document storing i.e. url recognition 
-- Search result by relevancy (word frequency)
-- REST API interface
-- Github Gist interaface -> gist content search
