@@ -33,4 +33,5 @@ type Config struct {
 	Path         string `json:"path"`
 	ShowContent  bool   `json:"show_content"`
 	ShowNumLines uint16 `json:"show_num_lines"`
+	FileType     string `json:"file_type"`
 }

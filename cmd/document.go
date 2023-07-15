@@ -20,13 +20,13 @@ func (p *Project) readFileNames() {
 		if err != nil {
 			p.ErrorLog.Fatalf(err.Error())
 		}
-		if strings.Contains(path, ".md") {
+		if strings.Contains(path, p.config.FileType) {
 			p.files = append(p.files, path)
 			p.InfoLog.Printf("File collected: %s\n", path)
 		}
 		return nil
 	})
-	
+
 	if err != nil {
 		panic(err)
 	}

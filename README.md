@@ -18,8 +18,9 @@ Run `make all`. Don't forget to set up `config.json` beforehand.
 ```json
 {
     "path": "/path/to/root/folder/to/md/files/",
-    "show_content": true, # show content of file
-    "show_num_lines": 10 # limit lines of content
+    "show_content": true,   # show content of file
+    "show_num_lines": 10    # limit lines of content
+    "file_type": ".md"      # file type to index 
 }
 ```
 
@@ -30,3 +31,4 @@ Run `make all`. Don't forget to set up `config.json` beforehand.
 - More sophisticated document storing i.e. url recognition 
 - Search result by relevancy (word frequency)
 - REST API interface
+- Github Gist interaface -> gist content search
