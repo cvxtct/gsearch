@@ -1,6 +1,5 @@
 # GSEARCH
 ![Coverage](https://img.shields.io/badge/Coverage-30.1%25-yellow)
-
 [![Go](https://github.com/cvxtct/gsearch/actions/workflows/go.yml/badge.svg)](https://github.com/cvxtct/gsearch/actions/workflows/go.yml) [![Golangci-lint](https://github.com/cvxtct/gsearch/actions/workflows/main.yml/badge.svg)](https://github.com/cvxtct/gsearch/actions/workflows/main.yml) [![CodeQL](https://github.com/cvxtct/gsearch/actions/workflows/codeql.yml/badge.svg)](https://github.com/cvxtct/gsearch/actions/workflows/codeql.yml)
 
 ---
