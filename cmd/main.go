@@ -2,7 +2,9 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"runtime"
@@ -98,6 +100,18 @@ func main() {
 	}
 	elapsed = time.Since(start)
 	p.InfoLog.Printf("Indexing took: %s", elapsed)
+
+	// SAVE INDEX TO FILE
+	// jsonStr, err := json.Marshal(p.idx)
+	// if err != nil {
+	// 	p.ErrorLog.Fatal(err)
+	// }
+	// file, _ := os.OpenFile("index.json", os.O_CREATE, os.ModePerm)
+	// defer file.Close()
+	// encoder := json.NewEncoder(file)
+	// encoder.Encode(jsonStr)
+	jsonString, _ := json.Marshal(p.idx)
+	ioutil.WriteFile("index.json", jsonString, os.ModePerm)
 	// TODOs
 	// cli program should store index on disk,
 	// create file time hashes
@@ -138,7 +152,7 @@ func main() {
 		// find longest path
 		var maxLen int
 		maxLen = 0
-		
+
 		for _, id := range matchedIDs {
 			doc := p.documents[id]
 			if maxLen < len(doc.FilePath) {
