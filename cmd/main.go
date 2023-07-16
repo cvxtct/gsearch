@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"runtime"
@@ -102,29 +101,22 @@ func main() {
 	p.InfoLog.Printf("Indexing took: %s", elapsed)
 
 	// SAVE INDEX TO FILE
-	// jsonStr, err := json.Marshal(p.idx)
-	// if err != nil {
-	// 	p.ErrorLog.Fatal(err)
-	// }
-	// file, _ := os.OpenFile("index.json", os.O_CREATE, os.ModePerm)
-	// defer file.Close()
-	// encoder := json.NewEncoder(file)
-	// encoder.Encode(jsonStr)
 	jsonString, _ := json.Marshal(p.idx)
-	ioutil.WriteFile("index.json", jsonString, os.ModePerm)
+	err := os.WriteFile("index.json", jsonString, os.ModePerm)
+	if err != nil {
+		p.ErrorLog.Fatal(err)
+	}
 	// TODOs
-	// cli program should store index on disk,
-	// create file time hashes
-	// recreate each file hash upon start,
-	// if change -> reindex
+	// store files, documents, index
 
 	reader := bufio.NewReader(os.Stdin)
 
 	// User interaction
 
+	fmt.Print("\n")
+	color.Yellow("+ + + + s e a r c h + + + +\n")
+
 	for {
-		fmt.Print("\n")
-		color.Yellow("//////////////////////////////////////////// s e a r c h /////////////////////////////////////////")
 		fmt.Print("\n")
 		color.Green("Documents indexed: %d", len(p.documents))
 		color.Green("Index size: %d token(s)", len(p.idx))
