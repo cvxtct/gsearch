@@ -1,13 +1,12 @@
-VERSION=0.5.0
 GITHASH ?= $(shell git describe --long)
 
 build_package: unit_tests
 	@echo "Building GSEARCH binary..."
-	env CGO_ENABLED=0 go build -ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=$(GITHASH) -X main.version=${VERSION}" -o gsearch ./cmd/
+	env CGO_ENABLED=0 go build -ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=$(GITHASH)" -o gsearch ./cmd/
 	@echo "Build done!"
 
 unit_tests:
-	@echo "Running unit tests..."
+	@echo "Starting unit tests..."
 	go test -v ./cmd/
 
 install:

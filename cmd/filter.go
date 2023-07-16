@@ -46,3 +46,9 @@ func stemmerFilter(tokens []string) []string {
 	}
 	return r
 }
+
+// TODO
+// choose for removal set of special characters -> collect them
+// ignore non english words and non english characters
+// review and extend stop words
+// recognise urls, email adresses (?)
