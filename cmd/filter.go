@@ -1,7 +1,6 @@
 package main
 
 import (
-	"regexp"
 	"strings"
 
 	snowballeng "github.com/kljensen/snowball/english"
