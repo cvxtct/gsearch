@@ -54,7 +54,6 @@ func (p *Project) parseDocument(f string, i int) document {
 		// TODO recognize title
 		line := fileScanner.Text()
 		// TODO extract urls from line
-
 		lines += line + " "
 	}
 
