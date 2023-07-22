@@ -1,8 +1,9 @@
 GITHASH ?= $(shell git describe --long)
+ARCH ?= $(shell uname -m)
 
 build_package: unit_tests
 	@echo "Building GSEARCH binary..."
-	env CGO_ENABLED=0 go build -ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=$(GITHASH)" -o gsearch ./cmd/
+	env CGO_ENABLED=0 go build -ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=$(GITHASH)" -o gsearch-${ARCH}-${GITHASH} ./cmd/
 	@echo "Build done!"
 
 unit_tests:
