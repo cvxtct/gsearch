@@ -46,7 +46,7 @@ func TestAdd(t *testing.T) {
 		{doc: document{Id: 3, Text: "This must be a longer sentence to have interesting result Today."}, search: "longer today", expected: []uint32{3}},
 		// intersection using 3 terms
 		{doc: document{Id: 4, Text: "Physics is exciting to study, even better if you like math too."}, search: "math physics study", expected: []uint32{4}},
-		// add some trick to cover contition when res greater than Ids
+		// add some trick to cover condition when res greater than Ids
 		{doc: document{Id: 5, Text: "Physics is everywhere, it defines Today."}, search: "physics today", expected: []uint32{5}},
 		// search term not in index
 		{doc: document{Id: 6, Text: "A sentence which not contains the search term."}, search: "foo", expected: nil},
