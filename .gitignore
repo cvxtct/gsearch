@@ -11,7 +11,7 @@ index.json
 config.json
 
 # Binaries
-gsearch
+*gsearch*
 
 # OSX
 .DS_Store
