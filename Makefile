@@ -4,13 +4,13 @@ ARCH ?= $(shell uname -m)
 ## build gsearch binary
 build: test
 	@echo "Building GSEARCH binary..."
-	env CGO_ENABLED=1 go build -race -ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=$(GITHASH)" -o gsearch-${ARCH}-${GITHASH} ./search-service/cmd/api
+	env CGO_ENABLED=1 go build -race -ldflags "-X main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.githash=$(GITHASH)" -o gsearch-${ARCH}-${GITHASH} ./cmd/
 	@echo "Build done!"
 
 ## run tests, performance tests, check for race condition
 test:
 	@echo "Start unit test..."
-	go test -v -race ./search-service/cmd/api/
+	go test -v -race ./cmd/
 
 ## install program
 install:
