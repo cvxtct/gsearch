@@ -41,7 +41,6 @@ func main() {
 
 	// init project
 	var p Project
-	p.idx = make(index)
 
 	// read config
 	p.config = Configuration()
@@ -49,18 +48,24 @@ func main() {
 	p.InfoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	p.ErrorLog = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
+	// checkers, check system before start
+	// later check memory, check disk space, calculate! etc...
+	p.InfoLog.Println("Pre flight checks...")
+	p.preFlightCheckOs()
+	p.InfoLog.Println("Pre flight checks done!")
+
+	p.InfoLog.Println("Load data...")
+	p.stopwords = make(map[string]struct{})
+	p.stopWords()
+
+	p.idx = make(index)
+
 	docProd := &documentProducer{
 		docChan: make(chan document, 100),
 		quit:    make(chan chan error),
 	}
 
 	p.InfoLog.Println("Starting Markdown search...")
-
-	// checkers, check system before start
-	// later check memory, check disk space, calculate! etc...
-	p.InfoLog.Println("Pre flight checks...")
-	p.preFlightCheckOs()
-	p.InfoLog.Println("Pre flight checks done!")
 
 	// read file names from the path given in config
 	p.readFileNames()

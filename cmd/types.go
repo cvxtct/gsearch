@@ -27,6 +27,7 @@ type Project struct {
 	idx       index
 	query     string
 	documents []document
+	stopwords map[string]struct{}
 	config    Config
 	InfoLog   *log.Logger
 	ErrorLog  *log.Logger

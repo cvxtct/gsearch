@@ -7,7 +7,7 @@ import "log"
 // since the subesquent document id always greater
 // document added to index by doc.ID results ascending index
 func (p *Project) add(doc document) {
-	for _, token := range normalize(doc.Text) {
+	for _, token := range p.normalize(doc.Text) {
 		ids := p.idx[token]
 		if ids != nil && ids[len(ids)-1] == doc.Id {
 			// Don't add same ID twice.
@@ -46,7 +46,7 @@ func intersection(a []uint32, b []uint32) []uint32 {
 // search function retrieves document id(s) from index
 func (p *Project) search(text string) []uint32 {
 	var res []uint32
-	for _, token := range normalize(text) {
+	for _, token := range p.normalize(text) {
 		if ids, ok := p.idx[token]; ok {
 			// search term is one word
 			if res == nil {
