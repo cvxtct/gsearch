@@ -18,6 +18,12 @@ func TestIntersection(t *testing.T) {
 		{a: []uint32{3, 4, 5, 6}, b: []uint32{1, 2, 3, 5, 6}, expected: []uint32{3, 5, 6}},
 	}
 
+	// TODO - FIXME
+	p.stopwords = map[string]struct{}{
+		"a": {}, "and": {}, "be": {}, "have": {}, "i": {},
+		"in": {}, "of": {}, "that": {}, "the": {}, "to": {},
+	}
+	
 	for _, tt := range intersectionTestvals {
 		testname := fmt.Sprintf("%v", tt.a)
 		t.Run(testname, func(t *testing.T) {
@@ -50,6 +56,12 @@ func TestAdd(t *testing.T) {
 		{doc: document{Id: 5, Text: "Physics is everywhere, it defines Today."}, search: "physics today", expected: []uint32{5}},
 		// search term not in index
 		{doc: document{Id: 6, Text: "A sentence which not contains the search term."}, search: "foo", expected: nil},
+	}
+
+	// TODO - FIXME
+	p.stopwords = map[string]struct{}{
+		"a": {}, "and": {}, "be": {}, "have": {}, "i": {},
+		"in": {}, "of": {}, "that": {}, "the": {}, "to": {},
 	}
 
 	for _, tt := range addDocumentToIndexTest {
