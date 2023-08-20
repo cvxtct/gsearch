@@ -42,6 +42,9 @@ func main() {
 	// init project
 	var p Project
 	p.idx = make(index)
+	p.ReadSourceFile("english.txt")
+
+	time.Sleep(time.Second * 30)
 
 	// read config
 	p.config = Configuration()
