@@ -4,6 +4,9 @@
 # Index
 index.json
 
+# Lang files
+english.txt
+
 # Secret notes
 .notes
 
