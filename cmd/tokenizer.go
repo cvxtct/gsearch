@@ -16,10 +16,10 @@ func tokenize(text string) []string {
 	})
 }
 
-func normalize(text string) []string {
+func (p *Project)normalize(text string) []string {
 	tokens := tokenize(text)
 	tokens = lowercaseFilter(tokens)
-	tokens = stopwordFilter(tokens)
+	tokens = p.stopwordFilter(tokens)
 	tokens = stemmerFilter(tokens)
 	return tokens
 }
