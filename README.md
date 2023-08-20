@@ -10,16 +10,5 @@ Inspired by [Let's build a Full-Text Search engine](https://artem.krylysov.com/b
 
 ## Install
 
-Run `make all`. Don't forget to set up `config.json` beforehand.
-
-### Config
-
-```json
-{
-    "path": "/path/to/root/folder/to/md/files/",
-    "show_content": true,   # show content of file
-    "show_num_lines": 10    # limit lines of content
-    "file_type": ".md"      # file type to index 
-}
-```
+Run `make all`.  Modify `config.json` beforehand.
 
