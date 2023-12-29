@@ -10,7 +10,8 @@ import (
 // generic client to download,
 // generic struct loader
 func (p *Project) stopWords() {
-	file, err := os.Open("english.txt")
+	// TODO 
+	file, err := os.Open("/usr/local/Cellar/gsearch/english.txt")
 	if err != nil {
 		log.Panic(err)
 	}
