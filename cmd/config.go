@@ -1,9 +1,9 @@
 package main
 
 import (
-    "encoding/json"
-    "os"
-    "fmt"
+	"encoding/json"
+	"fmt"
+	"os"
 )
 
 func Configuration() Config {

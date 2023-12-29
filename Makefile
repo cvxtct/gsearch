@@ -3,9 +3,9 @@ GITHASH ?= $(shell git describe --long)
 ARCH ?= $(shell uname -m)
 BASE_BINARY_NAME = gsearch
 
-## Checking OS
+## Checking OS -> naively ls /usr/local/Cellar
 checkos: 
-	ls -lha /usr/local/Cellar &&
+	ls -lha /usr/local/Cellar 1>/dev/null  &&
 	@echo "OS OK!"
 
 ## Build gsearch binary
@@ -20,12 +20,14 @@ test:
 	go test -v -race ./cmd/
 
 ## Install binary
+## TODO fix line 30 cp english.txt
 install: checkos
 	@echo "Install..."
 	chmod +x ${BASE_BINARY_NAME}-* && \
 	mkdir -p /usr/local/Cellar/${BASE_BINARY_NAME} && \
 	cp ${BASE_BINARY_NAME}-* /usr/local/Cellar/${BASE_BINARY_NAME}/${BASE_BINARY_NAME} && \
  	cp ./configs/config.json /usr/local/Cellar/${BASE_BINARY_NAME}
+	cp ./configs/english.txt /usr/local/Cellar/${BASE_BINARY_NAME}
 	@echo "Set symlink..."
 	ln /usr/local/Cellar/${BASE_BINARY_NAME}/${BASE_BINARY_NAME} /usr/local/bin/gsearch
 	@echo "Install done!"
